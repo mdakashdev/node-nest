@@ -1,5 +1,11 @@
-import { Controller, Get } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Post,
+    Body
+} from '@nestjs/common';
 import { HealthService } from "./health.service";
+import { CheckHealthDto } from "./dto/check-health.dto";
 
 @Controller('health')
 export class HealthController {
@@ -19,4 +25,10 @@ export class HealthController {
             message: 'test another get method'
         }
     }
+
+    @Post('check')
+    checkService(@Body() dto: CheckHealthDto) {
+        return this.healthService.checkService(dto)
+    }
+
 }
