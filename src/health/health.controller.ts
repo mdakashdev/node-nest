@@ -31,4 +31,9 @@ export class HealthController {
         return this.healthService.checkService(dto)
     }
 
+    @Get('database')
+    getDatabaseStatus() {
+        return this.healthService.getDatabaseStatus()
+    }
+
 }
