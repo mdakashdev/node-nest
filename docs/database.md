@@ -13,11 +13,12 @@ Need to work / setup:
 
 
 Tech:
-PostgreSQL (database)
-Prisma ORM (Database-এর সঙ্গে যোগাযোগ)
-Prisma Client
-NestJS (backend API)
-TypeScript (Type-safe code)
+* PostgreSQL (database)
+* Prisma ORM (Database-এর সঙ্গে যোগাযোগ)
+* Prisma Client
+* Prisma Studio (Prisma Studio হলো Database-এর GUI interface)
+* NestJS (backend API)
+* TypeScript (Type-safe code)
 
 
 Basic: 
@@ -97,7 +98,10 @@ Configure AppModule: root module a , এখন .env থেকে runtime-এ Dat
     install : `pnpm add @nestjs/config` then module a import kore dibo, aar isGlobal true kore dibo
                 এখন NestJS .env থেকে DATABASE_URL load করবে 
                 এবং PrismaService সেটি ব্যবহার করতে পারবে।
-    
+
+
+Database-এর GUI interface
+    studio : `pnpm exec prisma studio` User table দেখতে পারবে। নতুন User তৈরি করতে, edit করতে পারবে & Record delete করতে পারবে।
 
 ## Connect DB with feature / module
 
@@ -108,41 +112,3 @@ Configure AppModule: root module a , এখন .env থেকে runtime-এ Dat
 
 
 ---
-
-Prisma হলো একটি ORM (Object Relational Mapper)।
-
-এটি আমাদের TypeScript code এবং Database-এর মধ্যে যোগাযোগ সহজ করে।
-
-
-Laravel	NestJS
-Eloquent ORM	Prisma ORM
-Migration	Prisma Migration
-Model	Prisma Schema Model
-User::all()	prisma.user.findMany()
-User::create()	prisma.user.create()
-
-
-# postgres 
-
-run korar jonno 
-
-
-```bash
-psql --version
-
-brew services list
-
-brew services start postgresql@18
-
-psql postgres
-```
-Prisma CLI & client install:
-
-```bash
-pnpm add -D prisma@6.19.0
-pnpm add @prisma/client@6.19.0
-```
-
-এখানে:
-- prisma = CLI, Schema, Migration পরিচালনা করবে।
-- @prisma/client = NestJS code থেকে Database query করবে।
