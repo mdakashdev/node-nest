@@ -134,3 +134,22 @@ User Create: Prisma-এর মাধ্যমে Database-এ নতুন User 
 Token Generate: jwtService.signAsync() দিয়ে JWT Access Token তৈরি করা।
 Password Exclude: password property-কে আলাদা করে বাকি User Data safeUser-এ রাখা, যাতে Response-এ Password না যায়।
 Return Response: Success message, User Information এবং Access Token Client-কে পাঠানো।
+
+
+For login : 
+
+1. user ache kina seta khujechte
+2. user na thakle unauthorize meesage deya
+3. bcrypt pass compare kora, thik diyeche kina
+4. passworind na miilee abar message deya
+5. access token create kora
+6. password ta ke exclude kora
+7. response return kora 
+
+1. Find User: Database-এ Email দিয়ে User খুঁজে বের করা।
+2. Unauthorized Exception: User না পাওয়া গেলে UnauthorizedException দিয়ে Invalid email or password Error পাঠানো।
+3. Compare Password: bcrypt.compare() দিয়ে Client-এর দেওয়া Password এবং Database-এ থাকা Hashed Password মিলিয়ে দেখা।
+4. Password Mismatch: Password না মিললে আবার UnauthorizedException দেওয়া।
+5. Generate Access Token: jwtService.signAsync() দিয়ে JWT Access Token তৈরি করা।
+6. Exclude Password: password property বাদ দিয়ে বাকি User Information safeUser-এ রাখা।
+7. Return Response: Success Message, User Information এবং Access Token Client-কে পাঠানো।
