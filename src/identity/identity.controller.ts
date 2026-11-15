@@ -1,7 +1,8 @@
 import {
     Controller,
     Post,
-    Body
+    Body,
+    Get
 } from '@nestjs/common';
 import {IdentityService} from "./identity.service";
 
@@ -18,8 +19,14 @@ export class IdentityController {
     register(@Body() registerData: RegisterDto) {
         return this.iService.register(registerData);
     }
+    
     @Post('login')
     login(@Body() loginData: LoginDto) {
         return this.iService.login(loginData);
+    }
+
+    @Get('me')
+    getMe() {
+        return 'hello my profile'
     }
 }
