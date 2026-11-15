@@ -2,12 +2,14 @@ import {
     Controller,
     Post,
     Body,
-    Get
+    Get,
+    UseGuards
 } from '@nestjs/common';
 import {IdentityService} from "./identity.service";
 
 import {RegisterDto} from "./dto/register.dto";
 import {LoginDto} from "./dto/login.dto";
+import {JwtIdentityGuard} from "./jwt-identity-guard";
 
 @Controller('identity')
 export class IdentityController {
@@ -25,6 +27,7 @@ export class IdentityController {
         return this.iService.login(loginData);
     }
 
+    @UseGuards(JwtIdentityGuard)
     @Get('me')
     getMe() {
         return 'hello my profile'
