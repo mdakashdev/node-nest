@@ -9,10 +9,10 @@
 3. Phase 3 — Database Integration
              PostgreSQL, Prisma, User Model, Migration।
 
-4. Phase 4 — Authentication ------------ `running`
+4. Phase 4 — Authentication 
              Register, Login, bcrypt, JWT, Refresh Token।
 
-5. Phase 5 — Authorization
+5. Phase 5 — Authorization ------------ `running`
              Guards, Roles, Admin permission।
 
 6. Phase 6 — User Management APIs
