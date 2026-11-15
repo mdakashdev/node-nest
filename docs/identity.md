@@ -27,6 +27,7 @@ controller ->
 
 এটি NestJS-কে বলছে, এই route-এর মূল method execute করার আগে JwtAuthGuard চালাও। `(step-3)` অর্থাৎ request প্রথমে Guard-এর কাছে যাবে।
 
+controller -> guard check token -> controller to service -> return data
 
 
 4. jwt - @nestjs/config and @nestjs/jwt

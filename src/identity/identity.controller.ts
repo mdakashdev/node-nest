@@ -3,13 +3,16 @@ import {
     Post,
     Body,
     Get,
-    UseGuards
+    UseGuards,
+    Req
 } from '@nestjs/common';
+
+import {Request} from "express";
 import {IdentityService} from "./identity.service";
 
 import {RegisterDto} from "./dto/register.dto";
 import {LoginDto} from "./dto/login.dto";
-import {JwtIdentityGuard} from "./jwt-identity-guard";
+import {JwtIdentityGuard, JwtPayload} from "./jwt-identity-guard";
 
 @Controller('identity')
 export class IdentityController {
@@ -29,7 +32,7 @@ export class IdentityController {
 
     @UseGuards(JwtIdentityGuard)
     @Get('me')
-    getMe() {
-        return 'hello my profile'
+    getMe(@Req() req: Request & { user: JwtPayload }) {
+        return this.iService.getMe(req.user.sub)
     }
 }
