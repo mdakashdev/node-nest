@@ -11,6 +11,7 @@ import {RegisterDto} from "./dto/register.dto";
 import {PrismaService} from "../prisma/prisma.service";
 import {LoginDto} from "./dto/login.dto";
 import {ConfigService} from "@nestjs/config";
+import {RefreshTokenDto} from "./dto/refresh-token.dto"
 
 @Injectable()
 export class IdentityService {
@@ -171,4 +172,64 @@ export class IdentityService {
             data: user
         }
     }
+
+
+    async refresh(data: RefreshTokenDto) {
+        // 1. Verify refresh token
+        let payload;
+
+        try {
+            payload = await this.jwtService.verifyAsync(
+                data.refreshToken,
+                {
+                    secret: this.configService.getOrThrow<string>(
+                        'REFRESH_TOKEN_SECRET',
+                    ),
+                },
+            );
+        } catch {
+            throw new UnauthorizedException('Invalid or expired refresh token');
+        }
+
+        // 2. Find user
+        const user = await this.prisma.user.findUnique({
+            where: { id: payload.sub },
+        });
+
+        if (!user || !user.isActive || !user.refreshTokenHash) {
+            throw new UnauthorizedException('Invalid refresh token');
+        }
+
+        // 3. Compare refresh token with stored hash
+        const isRefreshTokenValid = await bcrypt.compare(
+            data.refreshToken,
+            user.refreshTokenHash,
+        );
+
+        if (!isRefreshTokenValid) {
+            throw new UnauthorizedException('Invalid refresh token');
+        }
+
+        // 4. Generate new access token
+        const accessToken = await this.jwtService.signAsync(
+            {
+                sub: user.id,
+                email: user.email,
+                role: user.role,
+            },
+            {
+                secret: this.configService.getOrThrow<string>(
+                    'ACCESS_TOKEN_SECRET',
+                ),
+                expiresIn: '15m',
+            },
+        );
+
+        return {
+            success: true,
+            message: 'Access token refreshed successfully',
+            accessToken,
+        };
+    }
+
 }

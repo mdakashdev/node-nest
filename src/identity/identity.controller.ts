@@ -13,6 +13,7 @@ import {IdentityService} from "./identity.service";
 import {RegisterDto} from "./dto/register.dto";
 import {LoginDto} from "./dto/login.dto";
 import {JwtIdentityGuard, JwtPayload} from "./jwt-identity-guard";
+import {RefreshTokenDto} from "./dto/refresh-token.dto";
 
 @Controller('identity')
 export class IdentityController {
@@ -35,4 +36,10 @@ export class IdentityController {
     getMe(@Req() req: Request & { user: JwtPayload }) {
         return this.iService.getMe(req.user.sub)
     }
+
+    @Post('refresh')
+    refresh(@Body() data: RefreshTokenDto) {
+        return this.iService.refresh(data)
+    }
+
 }

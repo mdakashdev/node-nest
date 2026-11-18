@@ -53,3 +53,15 @@ JwtService — Token generate করার জন্য।
 ConfigService — Secret এবং expiration পড়ার জন্য।
 PrismaService — Database update করার জন্য।
 bcrypt — Refresh Token hash করার জন্য।
+
+---
+
+login korar somay - refresh token create korlam, then database bcryt kore save korlam 
+
+## Step-4 
+- create refresh DTO 
+
+ 
+# Summary
+
+ami login korar somay, access token and refresh token create korlam, and refresh token db te save rakhlam, after expirte hoye gele again login na kore, refresh endpoint use kore access token get korlam
