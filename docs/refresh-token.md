@@ -43,6 +43,11 @@ auth/auth.module.ts a secret & expire_in set korbo from env
 
 
 ---
+## in identity.service.ts
+
+private readonly prisma: PrismaService,
+private readonly jwtService: JwtService,
+private readonly configService: ConfigService
 
 JwtService — Token generate করার জন্য।
 ConfigService — Secret এবং expiration পড়ার জন্য।

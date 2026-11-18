@@ -10,12 +10,14 @@ import * as bcrypt from 'bcryptjs'
 import {RegisterDto} from "./dto/register.dto";
 import {PrismaService} from "../prisma/prisma.service";
 import {LoginDto} from "./dto/login.dto";
+import {ConfigService} from "@nestjs/config";
 
 @Injectable()
 export class IdentityService {
     constructor(
         private readonly prisma: PrismaService,
-        private readonly jwtService: JwtService
+        private readonly jwtService: JwtService,
+        private readonly configService: ConfigService
     ) {}
 
     async register(data: RegisterDto) {
@@ -40,7 +42,7 @@ export class IdentityService {
             data: {
                 name: data.name,
                 email: data.email,
-                password: data.password
+                password: hashedPassword
             }
         });
 
@@ -91,25 +93,58 @@ export class IdentityService {
         }
 
         //5. generate access token
-        const accessToken = await this.jwtService.signAsync({
-            sub: user.id,
-            email: user.email,
-            role: user.role,
-        })
+        const accessToken = await this.jwtService.signAsync(
+            {
+                sub: user.id,
+                email: user.email,
+                role: user.role,
+            },
+            {
+                secret: this.configService.getOrThrow<string>(
+                    'ACCESS_TOKEN_SECRET',
+                ),
+                expiresIn: '15m',
+            },
+        )
 
         //6. generate refresh token
+        const refreshToken = await this.jwtService.signAsync(
+            {
+                sub: user.id
+            },
+            {
+                secret: this.configService.getOrThrow<string>(
+                    'REFRESH_TOKEN_SECRET',
+                ),
+                expiresIn: '7d',
+            },
+        )
 
+        //7. Hash refresh token
+        const refreshTokenHash = await bcrypt.hash(
+            refreshToken,
+            10
+        )
+
+        //8. save refresh token
+        await this.prisma.user.update({
+            where: { id: user.id},
+            data: {
+                refreshTokenHash
+            }
+        })
 
         // exclude password
-        const {password, ...safeUser} = user;
+        const {password, refreshTokenHash: _, ...safeUser} = user;
 
-        //7. Return Response
+        //9. Return Response
         return {
             success: true,
             message: "login successful",
+            accessToken,
+            refreshToken,
             data: {
                 user: safeUser,
-                accessToken
             },
         }
     }
