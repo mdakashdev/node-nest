@@ -97,6 +97,9 @@ export class IdentityService {
             role: user.role,
         })
 
+        //6. generate refresh token
+
+
         // exclude password
         const {password, ...safeUser} = user;
 
